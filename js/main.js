@@ -10,7 +10,7 @@ var ADDRESS_X = 600;
 var ADDRESS_Y = 350;
 var ROOMS = 1;
 var AMOUNT = 30;
-var X_MAX_COORDINATE = 980;
+var X_MAX_COORDINATE = document.querySelector('.map__overlay').offsetWidth;
 var Y_MIN_COORDINATE = 130;
 var Y_MAX_COORDINATE = 630;
 var X_OFFSET = 25;
@@ -28,17 +28,16 @@ var randomArrayLength = function (array) {
   var featuresSet = [];
   var randomLength = getRandomNumber(1, array.length);
 
-  for (var a = 0; a < randomLength; a++) {
+  while (featuresSet.length < randomLength) {
     var elementNumber = getRandomNumber(0, array.length);
-
-    while (featuresSet.includes(array[elementNumber]) === false) {
+    if (!featuresSet.includes(array[elementNumber])) {
       featuresSet.push(array[elementNumber]);
     }
   }
   return featuresSet;
 };
 
-var data = function () {
+var createLocation = function () {
   return ({
     author: {
       avatar: 'img/avatars/user0' + getRandomNumber(1, LOCATIONS_AMOUNT) + '.png'
@@ -63,28 +62,28 @@ var data = function () {
   });
 };
 
-var getMassiveData = function () {
+var getMassiveArray = function () {
 
   var locations = [];
 
   for (var j = 0; j < LOCATIONS_AMOUNT; j++) {
-    locations.push(data());
+    locations.push(createLocation());
   }
   return locations;
 };
 
-var visualizePins = function () {
+var visualizePins = function (locations) {
 
   var fragment = document.createDocumentFragment();
 
   for (var f = 0; f < LOCATIONS_AMOUNT; f++) {
     var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
     var pin = pinTemplate.cloneNode(true);
-    pin.style.left = getMassiveData()[f].location.x;
-    pin.style.top = getMassiveData()[f].location.y;
+    pin.style.left = locations[f].location.x;
+    pin.style.top = locations[f].location.y;
 
-    pin.querySelector('.map__pin img').setAttribute('src', getMassiveData()[f].author.avatar);
-    pin.querySelector('.map__pin img').setAttribute('alt', getMassiveData()[f].offer.title);
+    pin.querySelector('.map__pin img').setAttribute('src', locations[f].author.avatar);
+    pin.querySelector('.map__pin img').setAttribute('alt', locations[f].offer.title);
     fragment.appendChild(pin);
   }
 
@@ -92,4 +91,4 @@ var visualizePins = function () {
   document.querySelector('.map__pins').appendChild(fragment);
 };
 
-visualizePins(getMassiveData());
+visualizePins(getMassiveArray());
