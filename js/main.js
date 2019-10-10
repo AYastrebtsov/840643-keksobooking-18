@@ -38,7 +38,7 @@ var randomArrayLength = function (array) {
 };
 
 var createLocation = function () {
-  return ({
+  return {
     author: {
       avatar: 'img/avatars/user0' + getRandomNumber(1, LOCATIONS_AMOUNT) + '.png'
     },
@@ -59,10 +59,10 @@ var createLocation = function () {
       x: getRandomNumber(0, X_MAX_COORDINATE) - X_OFFSET + 'px',
       y: getRandomNumber(Y_MIN_COORDINATE, Y_MAX_COORDINATE) - Y_OFFSET + 'px'
     }
-  });
+  };
 };
 
-var getMassiveArray = function () {
+var getLocations = function () {
 
   var locations = [];
 
@@ -91,4 +91,82 @@ var visualizePins = function (locations) {
   document.querySelector('.map__pins').appendChild(fragment);
 };
 
-visualizePins(getMassiveArray());
+var disableArray = function (array) {
+
+  for (var i = 0; i < array.length; i++) {
+    array[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+var enableArray = function (array) {
+
+  for (var i = 0; i < array.length; i++) {
+    array[i].removeAttribute('disabled', 'disabled');
+  }
+};
+
+var FIELDSETS = document.querySelectorAll('fieldset');
+var SELECTS = document.querySelectorAll('select');
+
+var disablePage = function () {
+  document.querySelector('.map__filters').classList.add('ad-form--disabled');
+
+  disableArray(FIELDSETS);
+  disableArray(SELECTS);
+};
+
+var activatePage = function () {
+  document.querySelector('.map__filters').classList.remove('ad-form--disabled');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  enableArray(FIELDSETS);
+  enableArray(SELECTS);
+  visualizePins(getLocations());
+};
+
+var getPosition = function () {
+  var soughtPin = document.querySelector('.map__pin--main');
+  var pinCoordinateX = soughtPin.style.left;
+  var pinCoordinateY = soughtPin.style.top;
+  var coordinates = [pinCoordinateX, pinCoordinateY];
+
+  return coordinates;
+};
+
+var writeDownCoordinates = function () {
+  var pinLocation = getPosition();
+  var coordinatesField = document.querySelector('#address');
+  coordinatesField.value = 'x:' + pinLocation[0] + '; ' + 'y:' + pinLocation[1] + ';';
+};
+
+var minPin = document.querySelector('.map__pin--main');
+minPin.addEventListener('mousedown', activatePage, {once: true});
+minPin.addEventListener('mousedown', writeDownCoordinates);
+minPin.addEventListener('keydown', activatePage, {once: true});
+minPin.addEventListener('keydown', writeDownCoordinates);
+
+
+var rooms = document.querySelector('#room_number');
+var guests = document.querySelector('#capacity');
+
+var compare = function () {
+  if (rooms.selectedIndex === 0 && guests.selectedIndex === 2) {
+    rooms.setCustomValidity('');
+  } else if (rooms.selectedIndex === 1 && guests.selectedIndex === 1 || rooms.selectedIndex === 1 && guests.selectedIndex === 2) {
+    rooms.setCustomValidity('');
+  } else if (rooms.selectedIndex === 2 && guests.selectedIndex === 0 || rooms.selectedIndex === 2 && guests.selectedIndex === 1 || rooms.selectedIndex === 2 && guests.selectedIndex === 2) {
+    rooms.setCustomValidity('');
+  } else if (rooms.selectedIndex === 3 && guests.selectedIndex === 3) {
+    rooms.setCustomValidity('');
+  } else {
+    rooms.setCustomValidity('Такой вариант аренды недоступен');
+  }
+
+};
+
+rooms.addEventListener('change', compare);
+
+
+disablePage();
+
+
