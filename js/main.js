@@ -126,8 +126,8 @@ var activatePage = function () {
 
 var getPosition = function () {
   var soughtPin = document.querySelector('.map__pin--main');
-  var pinCoordinateX = soughtPin.style.left;
-  var pinCoordinateY = soughtPin.style.top;
+  var pinCoordinateX = parseInt(soughtPin.style.left, 10);
+  var pinCoordinateY = parseInt(soughtPin.style.top, 10);
   var coordinates = [pinCoordinateX, pinCoordinateY];
 
   return coordinates;
@@ -136,8 +136,10 @@ var getPosition = function () {
 var writeDownCoordinates = function () {
   var pinLocation = getPosition();
   var coordinatesField = document.querySelector('#address');
-  coordinatesField.value = 'x:' + pinLocation[0] + '; ' + 'y:' + pinLocation[1] + ';';
+  coordinatesField.value = 'x: ' + pinLocation[0] + '; ' + 'y: ' + pinLocation[1] + ';';
 };
+
+document.addEventListener('DOMContentLoaded', writeDownCoordinates);
 
 var minPin = document.querySelector('.map__pin--main');
 minPin.addEventListener('mousedown', activatePage, {once: true});
