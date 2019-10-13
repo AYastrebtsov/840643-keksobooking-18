@@ -149,7 +149,7 @@ var writeDownInitialCoordinates = function () {
 var writeDownCoordinates = function () {
   var pinLocation = getPosition();
   var coordinatesField = document.querySelector('#address');
-  coordinatesField.value = (pinLocation[0] - X_OFFSET) + '; ' + (pinLocation[1] - Y_OFFSET) + ';';
+  coordinatesField.value = (pinLocation[0] - X_OFFSET) + ', ' + (pinLocation[1] - Y_OFFSET) + ',';
 };
 
 document.addEventListener('DOMContentLoaded', writeDownInitialCoordinates);
@@ -166,7 +166,24 @@ var pinMovementHandler = function () {
 var guestsSelector = document.querySelector('#capacity');
 var guests = document.querySelectorAll('#capacity option');
 
-var compare = function () {
+var getRidOfSelected = function (array) {
+  for (var s = 0; s < array.length; s++) {
+    if (array[s].hasAttribute('selected')) {
+      array[s].removeAttribute('selected', 'selected');
+    }
+  }
+};
+
+var getSelected = function (array) {
+  for (var d = 0; d < array.length; d++) {
+    if (!array[d].hasAttribute('disabled')) {
+      array[d].setAttribute('selected', 'selected');
+      break;
+    }
+  }
+};
+
+var onChangeRoomsSelectHandler = function () {
   var selectedRoom = document.querySelector('#room_number').selectedIndex;
   var avaliableOptions = MAP_ROOMS_TO_GUESTS[selectedRoom];
 
@@ -188,22 +205,13 @@ var compare = function () {
     }
   }
 
-  for (var s = 0; s < guests.length; s++) {
-    if (guests[s].hasAttribute('selected')) {
-      guests[s].removeAttribute('selected', 'selected');
-    }
-  }
+  getRidOfSelected(guests);
+  getSelected(guests);
 
-  for (var d = 0; d < guests.length; d++) {
-    if (!guests[d].hasAttribute('disabled')) {
-      guests[d].setAttribute('selected', 'selected');
-      break;
-    }
-  }
 };
 
 var rooms = document.querySelector('#room_number');
-var roomsActivityHandler = rooms.addEventListener('change', compare);
+var roomsActivityHandler = rooms.addEventListener('change', onChangeRoomsSelectHandler);
 
 disablePage();
 pinMovementHandler();
