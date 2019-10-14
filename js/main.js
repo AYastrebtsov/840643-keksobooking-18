@@ -16,6 +16,13 @@ var Y_MAX_COORDINATE = 630;
 var X_OFFSET = 25;
 var Y_OFFSET = 70;
 
+var MAP_ROOMS_TO_GUESTS = {
+  0: ['для 1 гостя'],
+  1: ['для 1 гостя', 'для 2 гостей'],
+  2: ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
+  3: ['не для гостей']
+};
+
 
 function getRandomNumber(min, max) {
   min = Math.ceil(min);
@@ -38,7 +45,7 @@ var randomArrayLength = function (array) {
 };
 
 var createLocation = function () {
-  return ({
+  return {
     author: {
       avatar: 'img/avatars/user0' + getRandomNumber(1, LOCATIONS_AMOUNT) + '.png'
     },
@@ -59,10 +66,10 @@ var createLocation = function () {
       x: getRandomNumber(0, X_MAX_COORDINATE) - X_OFFSET + 'px',
       y: getRandomNumber(Y_MIN_COORDINATE, Y_MAX_COORDINATE) - Y_OFFSET + 'px'
     }
-  });
+  };
 };
 
-var getMassiveArray = function () {
+var getLocations = function () {
 
   var locations = [];
 
@@ -91,4 +98,123 @@ var visualizePins = function (locations) {
   document.querySelector('.map__pins').appendChild(fragment);
 };
 
-visualizePins(getMassiveArray());
+var disableArray = function (array) {
+
+  for (var i = 0; i < array.length; i++) {
+    array[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+var enableArray = function (array) {
+
+  for (var i = 0; i < array.length; i++) {
+    array[i].removeAttribute('disabled', 'disabled');
+  }
+};
+
+var FIELDSETS = document.querySelectorAll('fieldset');
+var SELECTS = document.querySelectorAll('select');
+
+var disablePage = function () {
+  document.querySelector('.map__filters').classList.add('ad-form--disabled');
+
+  disableArray(FIELDSETS);
+  disableArray(SELECTS);
+};
+
+var activatePage = function () {
+  document.querySelector('.map__filters').classList.remove('ad-form--disabled');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  enableArray(FIELDSETS);
+  enableArray(SELECTS);
+  visualizePins(getLocations());
+};
+
+var getPosition = function () {
+  var soughtPin = document.querySelector('.map__pin--main');
+  var pinCoordinateX = parseInt(soughtPin.style.left, 10);
+  var pinCoordinateY = parseInt(soughtPin.style.top, 10);
+  var coordinates = [pinCoordinateX, pinCoordinateY];
+
+  return coordinates;
+};
+
+var writeDownInitialCoordinates = function () {
+  var pinLocation = getPosition();
+  var coordinatesField = document.querySelector('#address');
+  coordinatesField.value = pinLocation[0] + '; ' + pinLocation[1] + ';';
+};
+
+var writeDownCoordinates = function () {
+  var pinLocation = getPosition();
+  var coordinatesField = document.querySelector('#address');
+  coordinatesField.value = (pinLocation[0] - X_OFFSET) + ', ' + (pinLocation[1] - Y_OFFSET) + ',';
+};
+
+document.addEventListener('DOMContentLoaded', writeDownInitialCoordinates);
+
+var pinMovementHandler = function () {
+  var minPin = document.querySelector('.map__pin--main');
+
+  minPin.addEventListener('mousedown', activatePage, {once: true});
+  minPin.addEventListener('mousedown', writeDownCoordinates);
+  minPin.addEventListener('keydown', activatePage, {once: true});
+  minPin.addEventListener('keydown', writeDownCoordinates);
+};
+
+var guestsSelector = document.querySelector('#capacity');
+var guests = document.querySelectorAll('#capacity option');
+
+var getRidOfSelected = function (array) {
+  for (var s = 0; s < array.length; s++) {
+    if (array[s].hasAttribute('selected')) {
+      array[s].removeAttribute('selected', 'selected');
+    }
+  }
+};
+
+var getSelected = function (array) {
+  for (var d = 0; d < array.length; d++) {
+    if (!array[d].hasAttribute('disabled')) {
+      array[d].setAttribute('selected', 'selected');
+      break;
+    }
+  }
+};
+
+var onChangeRoomsSelectHandler = function () {
+  var selectedRoom = document.querySelector('#room_number').selectedIndex;
+  var avaliableOptions = MAP_ROOMS_TO_GUESTS[selectedRoom];
+
+  for (var i = 0; i < guests.length; i++) {
+    if (avaliableOptions.includes(guests[i].innerText)) {
+      guests[i].removeAttribute('disabled', 'disabled');
+    } else {
+      guests[i].setAttribute('disabled', 'disabled');
+    }
+  }
+
+  for (var m = 0; m < guests.length; m++) {
+    if (guests[m].hasAttribute('disabled')) {
+      guestsSelector.setCustomValidity('Такой вариант аренды недоступен');
+      break;
+    } else {
+      guestsSelector.setCustomValidity('');
+      break;
+    }
+  }
+
+  getRidOfSelected(guests);
+  getSelected(guests);
+
+};
+
+var rooms = document.querySelector('#room_number');
+var roomsActivityHandler = rooms.addEventListener('change', onChangeRoomsSelectHandler);
+
+disablePage();
+pinMovementHandler();
+roomsActivityHandler();
+
+
