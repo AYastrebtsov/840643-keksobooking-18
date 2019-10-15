@@ -32,7 +32,7 @@
 
     enableArray(FIELDSETS);
     enableArray(SELECTS);
-    window.renderPlace.visualizePins(window.place.getLocations());
+    window.place.visualizePins(window.place.getLocations());
   };
 
   var getPosition = function () {
@@ -58,7 +58,7 @@
 
   document.addEventListener('DOMContentLoaded', writeDownInitialCoordinates);
 
-  var pinMovementHandler = function () {
+  var listenToPinMovement = function () {
     var minPin = document.querySelector('.map__pin--main');
 
     minPin.addEventListener('mousedown', activatePage, {once: true});
@@ -69,10 +69,10 @@
 
   window.pageCondition = {
     disablePage: disablePage,
-    pinMovementHandler: pinMovementHandler,
+    listenToPinMovement: listenToPinMovement,
   };
 
 }());
 
 window.pageCondition.disablePage();
-window.pageCondition.pinMovementHandler();
+window.pageCondition.listenToPinMovement();

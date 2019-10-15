@@ -55,9 +55,6 @@ var onChangeRoomsSelectHandler = function () {
 };
 
 var rooms = document.querySelector('#room_number');
-var roomsActivityHandler = rooms.addEventListener('change', onChangeRoomsSelectHandler);
-
-
-roomsActivityHandler();
+rooms.addEventListener('change', onChangeRoomsSelectHandler);
 
 

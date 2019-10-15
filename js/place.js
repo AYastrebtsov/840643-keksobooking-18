@@ -21,7 +21,7 @@
   var createLocation = function () {
     return {
       author: {
-        avatar: 'img/avatars/user0' + window.generateRandom.randomArrayLength(1, LOCATIONS_AMOUNT) + '.png'
+        avatar: 'img/avatars/user0' + window.generateRandom.getRandomNumber(1, LOCATIONS_AMOUNT) + '.png'
       },
       offer: {
         title: 'заголовок объявления',
@@ -53,22 +53,28 @@
     return locations;
   };
 
+  var visualizePins = function (locations) {
+
+    var fragment = document.createDocumentFragment();
+
+    for (var f = 0; f < LOCATIONS_AMOUNT; f++) {
+      var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+      var pin = pinTemplate.cloneNode(true);
+      pin.style.left = locations[f].location.x;
+      pin.style.top = locations[f].location.y;
+
+      pin.querySelector('.map__pin img').setAttribute('src', locations[f].author.avatar);
+      pin.querySelector('.map__pin img').setAttribute('alt', locations[f].offer.title);
+      fragment.appendChild(pin);
+    }
+
+    document.querySelector('.map').classList.remove('map--faded');
+    document.querySelector('.map__pins').appendChild(fragment);
+  };
+
   window.place = {
-    createLocation: createLocation,
     getLocations: getLocations,
-    LOCATIONS_AMOUNT: LOCATIONS_AMOUNT,
-    ADDRESS_X: ADDRESS_X,
-    ADDRESS_Y: ADDRESS_Y,
-    PRICE: PRICE,
-    ACCOMODATION_TYPE: ACCOMODATION_TYPE,
-    ROOMS: ROOMS,
-    AMOUNT: AMOUNT,
-    CHECKIN_TIMES: CHECKIN_TIMES,
-    FEATURES_ITEMS: FEATURES_ITEMS,
-    GALLERY: GALLERY,
-    X_MAX_COORDINATE: X_MAX_COORDINATE,
-    Y_MIN_COORDINATE: Y_MIN_COORDINATE,
-    Y_MAX_COORDINATE: Y_MAX_COORDINATE,
+    visualizePins: visualizePins,
     X_OFFSET: X_OFFSET,
     Y_OFFSET: Y_OFFSET
   };
