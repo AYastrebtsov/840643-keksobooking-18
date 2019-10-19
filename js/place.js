@@ -25,13 +25,13 @@
       },
       offer: {
         title: 'заголовок объявления',
-        address: (window.generateRandom.getRandomNumber(0, ADDRESS_X) + window.generateRandom.getRandomNumber(0, ADDRESS_Y)),
+        address: window.generateRandom.getRandomNumber(0, ADDRESS_X) + ',' + window.generateRandom.getRandomNumber(0, ADDRESS_Y),
         price: window.generateRandom.getRandomNumber(0, PRICE),
-        type: ACCOMODATION_TYPE[window.generateRandom.getRandomNumber(0, ACCOMODATION_TYPE.length)],
+        type: ACCOMODATION_TYPE[window.generateRandom.getRandomNumber(0, ACCOMODATION_TYPE.length - 1)],
         rooms: window.generateRandom.getRandomNumber(ROOMS, AMOUNT),
         guests: window.generateRandom.getRandomNumber(0, AMOUNT),
-        checkin: CHECKIN_TIMES[window.generateRandom.getRandomNumber(0, CHECKIN_TIMES.length)],
-        checkout: CHECKIN_TIMES[window.generateRandom.getRandomNumber(0, CHECKIN_TIMES.length)],
+        checkin: CHECKIN_TIMES[window.generateRandom.getRandomNumber(0, CHECKIN_TIMES.length - 1)],
+        checkout: CHECKIN_TIMES[window.generateRandom.getRandomNumber(0, CHECKIN_TIMES.length - 1)],
         features: window.generateRandom.randomArrayLength(FEATURES_ITEMS),
         description: 'описание',
         photos: window.generateRandom.randomArrayLength(GALLERY)
@@ -75,6 +75,8 @@
   window.place = {
     getLocations: getLocations,
     visualizePins: visualizePins,
+    LOCATIONS_AMOUNT: LOCATIONS_AMOUNT,
+    ACCOMODATION_TYPE: ACCOMODATION_TYPE,
     X_OFFSET: X_OFFSET,
     Y_OFFSET: Y_OFFSET
   };
