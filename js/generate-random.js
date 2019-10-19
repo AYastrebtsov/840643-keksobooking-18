@@ -14,7 +14,7 @@
     var randomLength = getRandomNumber(1, array.length);
 
     while (featuresSet.length < randomLength) {
-      var elementNumber = getRandomNumber(0, array.length);
+      var elementNumber = getRandomNumber(0, array.length - 1);
       if (!featuresSet.includes(array[elementNumber])) {
         featuresSet.push(array[elementNumber]);
       }
