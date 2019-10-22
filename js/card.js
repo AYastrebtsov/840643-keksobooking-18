@@ -10,7 +10,6 @@
     'palace': 'Дворец'
   };
 
-
   var visualizeCard = function (locations) {
 
     function writeDownFeatures() {
@@ -67,12 +66,13 @@
       card.querySelector('.popup__description').textContent = locations[c].offer.description;
       writeDownPhotos();
       card.querySelector('.popup__avatar').src = locations[c].author.avatar;
+      card.classList.add('hidden');
 
 
       cardFragment.appendChild(card);
     }
 
-    document.querySelector('.map').appendChild(cardFragment);
+    document.querySelector('.map__filters-container').before(cardFragment);
 
   };
 

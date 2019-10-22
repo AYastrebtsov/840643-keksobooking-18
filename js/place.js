@@ -57,6 +57,7 @@
 
     var fragment = document.createDocumentFragment();
 
+
     for (var f = 0; f < LOCATIONS_AMOUNT; f++) {
       var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
       var pin = pinTemplate.cloneNode(true);
@@ -66,10 +67,13 @@
       pin.querySelector('.map__pin img').setAttribute('src', locations[f].author.avatar);
       pin.querySelector('.map__pin img').setAttribute('alt', locations[f].offer.title);
       fragment.appendChild(pin);
+
+
     }
 
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.map__pins').appendChild(fragment);
+
   };
 
   window.place = {
