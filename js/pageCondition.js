@@ -68,6 +68,9 @@
 
       var hideCard = function () {
         closeBtns[targetedCard - 1].parentNode.classList.add('hidden');
+        if (evt.keyCode === 27) {
+          closeBtns[targetedCard - 1].parentNode.classList.add('hidden');
+        }
       };
 
       for (var h = 0; h < cardsList.length; h++) {
@@ -79,6 +82,7 @@
       var targetedCard = clickedPin.indexOf(evt.currentTarget);
       cardsList[targetedCard - 1].classList.remove('hidden');
       closeBtns[targetedCard - 1].addEventListener('click', hideCard);
+      document.addEventListener('keydown', hideCard);
     };
 
     for (var k = 0; k < clickedPin.length; k++) {
@@ -88,8 +92,17 @@
     }
   };
 
+
   var listenToPinMovement = function () {
     var minPin = document.querySelector('.map__pin--main');
+
+    var deleteActivator = function (evt) {
+      if (evt.type === 'keydown') {
+        minPin.removeEventListener('mousedown', activatePage, {once: true});
+      } else {
+        minPin.removeEventListener('keydown', activatePage, {once: true});
+      }
+    };
 
     minPin.addEventListener('mousedown', activatePage, {once: true});
     minPin.addEventListener('mousedown', writeDownCoordinates);
@@ -97,8 +110,10 @@
     minPin.addEventListener('keydown', writeDownCoordinates);
 
     minPin.addEventListener('mousedown', writeDownCoordinates);
-
     minPin.addEventListener('click', listenPins);
+
+    minPin.addEventListener('mousedown', deleteActivator, {once: true});
+    minPin.addEventListener('keydown', deleteActivator, {once: true});
   };
 
   window.pageCondition = {

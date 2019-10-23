@@ -102,9 +102,7 @@
 
 
     var cardFragment = document.createDocumentFragment();
-
     var fragment = document.createDocumentFragment();
-
 
     for (var f = 0; f < LOCATIONS_AMOUNT; f++) {
       var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
