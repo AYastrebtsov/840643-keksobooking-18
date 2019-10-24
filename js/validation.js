@@ -7,6 +7,13 @@ var MAP_ROOMS_TO_GUESTS = {
   3: ['не для гостей']
 };
 
+var ACCOMODATION_TO_PRICE = {
+  0: 0,
+  1: 1000,
+  2: 5000,
+  3: 10000
+};
+
 var guestsSelector = document.querySelector('#capacity');
 var guests = document.querySelectorAll('#capacity option');
 
@@ -54,7 +61,18 @@ var onChangeRoomsSelectHandler = function () {
 
 };
 
+var onChangeAccomodationSelectHandler = function () {
+  var selectedAccomodation = document.querySelector('#type').selectedIndex;
+  var accomodationPrice = document.querySelector('#price');
+
+  accomodationPrice.setAttribute('min', ACCOMODATION_TO_PRICE[selectedAccomodation]);
+  accomodationPrice.setAttribute('placeholder', ACCOMODATION_TO_PRICE[selectedAccomodation]);
+};
+
 var rooms = document.querySelector('#room_number');
 rooms.addEventListener('change', onChangeRoomsSelectHandler);
+
+var accomodation = document.querySelector('#type');
+accomodation.addEventListener('change', onChangeAccomodationSelectHandler);
 
 
