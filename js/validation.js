@@ -61,6 +61,48 @@ var onChangeRoomsSelectHandler = function () {
 
 };
 
+
+var timesSynchronizer = function (evt) {
+  console.log(evt.target.id);
+  var checkInTime = document.querySelector('#timein');
+  var checkOutTime = document.querySelector('#timeout');
+
+  var checkInTimes = Array.from(document.querySelectorAll('#timein option'));
+  var checkOutTimes = Array.from(document.querySelectorAll('#timeout option'));
+
+  var selectedCheckIn = checkInTime.options[checkInTime.selectedIndex].value;
+  var selectedCheckOut = checkOutTime.options[checkOutTime.selectedIndex].value;
+
+  getRidOfSelected(checkInTimes);
+  getRidOfSelected(checkOutTimes);
+
+  if (evt.target.id === 'timein') {
+
+    if (selectedCheckIn !== selectedCheckOut) {
+      for (var q = 0; q < checkInTimes.length; q++) {
+        if (checkOutTimes[q].value === selectedCheckIn) {
+          checkOutTimes[q].setAttribute('selected', 'selected');
+          checkInTimes[q].setAttribute('selected', 'selected');
+          checkOutTimes[q].selected = true;
+          checkInTimes[q].selected = true;
+        }
+      }
+    }
+  } else {
+    if (selectedCheckOut !== selectedCheckIn) {
+      for (var w = 0; w < checkOutTimes.length; w++) {
+        if (checkInTimes[w].value === selectedCheckOut) {
+          checkInTimes[w].setAttribute('selected', 'selected');
+          checkOutTimes[w].setAttribute('selected', 'selected');
+          checkInTimes[w].selected = true;
+          checkOutTimes[w].selected = true;
+        }
+      }
+    }
+  }
+};
+
+
 var onChangeAccomodationSelectHandler = function () {
   var selectedAccomodation = document.querySelector('#type').selectedIndex;
   var accomodationPrice = document.querySelector('#price');
@@ -75,4 +117,7 @@ rooms.addEventListener('change', onChangeRoomsSelectHandler);
 var accomodation = document.querySelector('#type');
 accomodation.addEventListener('change', onChangeAccomodationSelectHandler);
 
+
+document.querySelector('#timein').addEventListener('change', timesSynchronizer);
+document.querySelector('#timeout').addEventListener('change', timesSynchronizer);
 
