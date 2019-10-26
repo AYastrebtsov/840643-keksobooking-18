@@ -46,14 +46,10 @@ var onChangeRoomsSelectHandler = function () {
     }
   }
 
-  for (var m = 0; m < guests.length; m++) {
-    if (guests[m].hasAttribute('disabled')) {
-      guestsSelector.setCustomValidity('Такой вариант аренды недоступен');
-      break;
-    } else {
-      guestsSelector.setCustomValidity('');
-      break;
-    }
+  if (guests[selectedRoom].hasAttribute('disabled')) {
+    guestsSelector.setCustomValidity('Такой вариант аренды недоступен');
+  } else {
+    guestsSelector.setCustomValidity('');
   }
 
   getRidOfSelected(guests);
