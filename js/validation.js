@@ -20,7 +20,7 @@ var guests = document.querySelectorAll('#capacity option');
 var getRidOfSelected = function (array) {
   for (var s = 0; s < array.length; s++) {
     if (array[s].hasAttribute('selected')) {
-      array[s].removeAttribute('selected', 'selected');
+      array[s].selected = false;
     }
   }
 };
@@ -28,7 +28,7 @@ var getRidOfSelected = function (array) {
 var getSelected = function (array) {
   for (var d = 0; d < array.length; d++) {
     if (!array[d].hasAttribute('disabled')) {
-      array[d].setAttribute('selected', 'selected');
+      array[d].selected = true;
       break;
     }
   }
@@ -40,9 +40,9 @@ var onChangeRoomsSelectHandler = function () {
 
   for (var i = 0; i < guests.length; i++) {
     if (avaliableOptions.includes(guests[i].innerText)) {
-      guests[i].removeAttribute('disabled', 'disabled');
+      guests[i].disabled = false;
     } else {
-      guests[i].setAttribute('disabled', 'disabled');
+      guests[i].disabled = true;
     }
   }
 
@@ -57,9 +57,7 @@ var onChangeRoomsSelectHandler = function () {
 
 };
 
-
 var timesSynchronizer = function (evt) {
-  console.log(evt.target.id);
   var checkInTime = document.querySelector('#timein');
   var checkOutTime = document.querySelector('#timeout');
 
@@ -77,8 +75,6 @@ var timesSynchronizer = function (evt) {
     if (selectedCheckIn !== selectedCheckOut) {
       for (var q = 0; q < checkInTimes.length; q++) {
         if (checkOutTimes[q].value === selectedCheckIn) {
-          checkOutTimes[q].setAttribute('selected', 'selected');
-          checkInTimes[q].setAttribute('selected', 'selected');
           checkOutTimes[q].selected = true;
           checkInTimes[q].selected = true;
         }
@@ -88,8 +84,6 @@ var timesSynchronizer = function (evt) {
     if (selectedCheckOut !== selectedCheckIn) {
       for (var w = 0; w < checkOutTimes.length; w++) {
         if (checkInTimes[w].value === selectedCheckOut) {
-          checkInTimes[w].setAttribute('selected', 'selected');
-          checkOutTimes[w].setAttribute('selected', 'selected');
           checkInTimes[w].selected = true;
           checkOutTimes[w].selected = true;
         }
@@ -98,13 +92,12 @@ var timesSynchronizer = function (evt) {
   }
 };
 
-
 var onChangeAccomodationSelectHandler = function () {
   var selectedAccomodation = document.querySelector('#type').selectedIndex;
   var accomodationPrice = document.querySelector('#price');
 
-  accomodationPrice.setAttribute('min', ACCOMODATION_TO_PRICE[selectedAccomodation]);
-  accomodationPrice.setAttribute('placeholder', ACCOMODATION_TO_PRICE[selectedAccomodation]);
+  accomodationPrice.min = ACCOMODATION_TO_PRICE[selectedAccomodation];
+  accomodationPrice.placeholder = ACCOMODATION_TO_PRICE[selectedAccomodation];
 };
 
 var rooms = document.querySelector('#room_number');
@@ -117,3 +110,7 @@ accomodation.addEventListener('change', onChangeAccomodationSelectHandler);
 document.querySelector('#timein').addEventListener('change', timesSynchronizer);
 document.querySelector('#timeout').addEventListener('change', timesSynchronizer);
 
+
+window.validation = {
+  ACCOMODATION_TO_PRICE: ACCOMODATION_TO_PRICE
+};

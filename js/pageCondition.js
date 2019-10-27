@@ -16,14 +16,40 @@
     }
   };
 
+  var deletePins = function () {
+    var pins = document.querySelectorAll('.map__pin');
+    var cards = document.querySelectorAll('.map__card');
+
+    for (var v = 0; v < cards.length; v++) {
+      cards[v].remove();
+    }
+
+    for (var d = 0; d < pins.length; d++) {
+      if (!pins[d].classList.contains('map__pin--main')) {
+        pins[d].remove();
+      }
+    }
+  };
+
   var FIELDSETS = document.querySelectorAll('fieldset');
   var SELECTS = document.querySelectorAll('select');
 
   var disablePage = function () {
+    document.querySelector('.map').classList.add('map--faded');
     document.querySelector('.map__filters').classList.add('ad-form--disabled');
+    document.querySelector('.ad-form').classList.add('ad-form--disabled');
+
+    document.querySelector('#price').min = window.validation.ACCOMODATION_TO_PRICE[1];
+    document.querySelector('#price').placeholder = window.validation.ACCOMODATION_TO_PRICE[1];
+
+    deletePins();
 
     disableArray(FIELDSETS);
     disableArray(SELECTS);
+
+    document.querySelector('.ad-form').reset();
+    window.pageCondition.listenToPinMovement();
+
   };
 
   var activatePage = function () {
@@ -123,5 +149,5 @@
 
 }());
 
-window.pageCondition.disablePage();
+// window.pageCondition.disablePage();
 window.pageCondition.listenToPinMovement();
