@@ -16,14 +16,39 @@
     }
   };
 
+  var deletePins = function () {
+    var pins = document.querySelectorAll('.map__pin');
+    var cards = document.querySelectorAll('.map__card');
+
+    for (var v = 0; v < cards.length; v++) {
+      cards[v].remove();
+    }
+
+    for (var d = 0; d < pins.length; d++) {
+      if (!pins[d].classList.contains('map__pin--main')) {
+        pins[d].remove();
+      }
+    }
+  };
+
   var FIELDSETS = document.querySelectorAll('fieldset');
   var SELECTS = document.querySelectorAll('select');
 
   var disablePage = function () {
+    document.querySelector('.map').classList.add('map--faded');
     document.querySelector('.map__filters').classList.add('ad-form--disabled');
+    document.querySelector('.ad-form').classList.add('ad-form--disabled');
+    document.querySelector('#price').min = window.validation.ACCOMODATION_TO_PRICE[1];
+    document.querySelector('#price').placeholder = window.validation.ACCOMODATION_TO_PRICE[1];
 
+    deletePins();
     disableArray(FIELDSETS);
     disableArray(SELECTS);
+
+    document.querySelector('.ad-form').reset();
+    writeDownInitialCoordinates();
+    window.pageCondition.listenToPinMovement();
+
   };
 
   var activatePage = function () {
@@ -58,13 +83,62 @@
 
   document.addEventListener('DOMContentLoaded', writeDownInitialCoordinates);
 
+  var listenPins = function () {
+    var clickedPin = Array.from(document.querySelectorAll('.map__pin'));
+    var cardsList = document.querySelectorAll('.map__card');
+    var closeBtns = document.querySelectorAll('.popup__close');
+
+
+    var showCard = function (evt) {
+
+      var hideCard = function () {
+        closeBtns[targetedCard - 1].parentNode.classList.add('hidden');
+        if (evt.keyCode === 27) {
+          closeBtns[targetedCard - 1].parentNode.classList.add('hidden');
+        }
+      };
+
+      for (var h = 0; h < cardsList.length; h++) {
+        if (!cardsList[h].classList.contains('hidden')) {
+          cardsList[h].classList.add('hidden');
+        }
+      }
+
+      var targetedCard = clickedPin.indexOf(evt.currentTarget);
+      cardsList[targetedCard - 1].classList.remove('hidden');
+      closeBtns[targetedCard - 1].addEventListener('click', hideCard);
+      document.addEventListener('keydown', hideCard);
+    };
+
+    for (var k = 0; k < clickedPin.length; k++) {
+      if (!clickedPin[k].classList.contains('map__pin--main')) {
+        clickedPin[k].addEventListener('click', showCard);
+      }
+    }
+  };
+
+
   var listenToPinMovement = function () {
     var minPin = document.querySelector('.map__pin--main');
+
+    var deleteActivator = function (evt) {
+      if (evt.type === 'keydown') {
+        minPin.removeEventListener('mousedown', activatePage, {once: true});
+      } else {
+        minPin.removeEventListener('keydown', activatePage, {once: true});
+      }
+    };
 
     minPin.addEventListener('mousedown', activatePage, {once: true});
     minPin.addEventListener('mousedown', writeDownCoordinates);
     minPin.addEventListener('keydown', activatePage, {once: true});
     minPin.addEventListener('keydown', writeDownCoordinates);
+
+    minPin.addEventListener('mousedown', writeDownCoordinates);
+    minPin.addEventListener('click', listenPins);
+
+    minPin.addEventListener('mousedown', deleteActivator, {once: true});
+    minPin.addEventListener('keydown', deleteActivator, {once: true});
   };
 
   window.pageCondition = {
@@ -74,5 +148,9 @@
 
 }());
 
-window.pageCondition.disablePage();
 window.pageCondition.listenToPinMovement();
+
+document.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
+  evt.preventDefault();
+  window.pageCondition.disablePage();
+});
