@@ -38,16 +38,15 @@
     document.querySelector('.map').classList.add('map--faded');
     document.querySelector('.map__filters').classList.add('ad-form--disabled');
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
-
     document.querySelector('#price').min = window.validation.ACCOMODATION_TO_PRICE[1];
     document.querySelector('#price').placeholder = window.validation.ACCOMODATION_TO_PRICE[1];
 
     deletePins();
-
     disableArray(FIELDSETS);
     disableArray(SELECTS);
 
     document.querySelector('.ad-form').reset();
+    writeDownInitialCoordinates();
     window.pageCondition.listenToPinMovement();
 
   };
@@ -149,5 +148,9 @@
 
 }());
 
-// window.pageCondition.disablePage();
 window.pageCondition.listenToPinMovement();
+
+document.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
+  evt.preventDefault();
+  window.pageCondition.disablePage();
+});
