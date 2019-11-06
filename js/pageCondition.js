@@ -4,6 +4,7 @@
 
   var MAIN_PIN_INITIAL_X = 570;
   var MAIN_PIN_INITIAL_Y = 375;
+  var MAIN_PIN_OFFSET = 33;
   var FIELDSETS = document.querySelectorAll('fieldset');
   var SELECTS = document.querySelectorAll('select');
 
@@ -49,7 +50,6 @@
     resetMainPin();
     writeDownInitialCoordinates();
     window.pageCondition.listenToPinMovement();
-
   };
 
   var activatePage = function () {
@@ -58,7 +58,7 @@
 
     enableArray(FIELDSETS);
     enableArray(SELECTS);
-    window.place.visualizePins(window.place.getLocations());
+    window.place.visualizePins(window.backend.getLocations());
   };
 
   var getPosition = function () {
@@ -84,8 +84,24 @@
 
   var writeDownCoordinates = function () {
     var pinLocation = getPosition();
+
+    var map = document.querySelector('.map__pins');
+    var soughtPin = document.querySelector('.map__pin--main');
+
+    if (pinLocation[0] < -MAIN_PIN_OFFSET) {
+      soughtPin.style.left = '-33px';
+    } else if (pinLocation[0] > map.offsetWidth - MAIN_PIN_OFFSET) {
+      soughtPin.style.left = map.offsetWidth - MAIN_PIN_OFFSET + 'px';
+    }
+
+    if (pinLocation[1] < 130 - MAIN_PIN_OFFSET) {
+      soughtPin.style.top = 130 - MAIN_PIN_OFFSET + 'px';
+    } else if (pinLocation[1] > 630 - MAIN_PIN_OFFSET) {
+      soughtPin.style.top = 630 - MAIN_PIN_OFFSET + 'px';
+    }
+
     var coordinatesField = document.querySelector('#address');
-    coordinatesField.value = (pinLocation[0] - window.place.X_OFFSET) + ', ' + (pinLocation[1] - window.place.Y_OFFSET) + ',';
+    coordinatesField.value = (pinLocation[0] + MAIN_PIN_OFFSET) + ', ' + (pinLocation[1] + MAIN_PIN_OFFSET) + ',';
   };
 
   document.addEventListener('DOMContentLoaded', writeDownInitialCoordinates);
@@ -124,6 +140,30 @@
     }
   };
 
+  var getError = function () {
+    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+    var error = errorTemplate.cloneNode(true);
+    var page = document.querySelector('main');
+    page.appendChild(error);
+    var errorText = document.querySelector('.error__message');
+
+    var closeError = function (evt) {
+      if (evt.target !== errorText) {
+        page.removeChild(error);
+      }
+    };
+
+    error.addEventListener('click', closeError, {once: true});
+    window.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === 27 && document.querySelector('.error')) {
+        page.removeChild(error);
+      }
+    });
+
+    document.querySelector('.map__pin--main').addEventListener('mousedown', activatePage, {once: true});
+    document.querySelector('.map__pin--main').addEventListener('keydown', activatePage, {once: true});
+  };
+
 
   var listenToPinMovement = function () {
     var minPin = document.querySelector('.map__pin--main');
@@ -136,45 +176,6 @@
       }
     };
 
-    minPin.addEventListener('mousedown', function (evt) {
-      evt.preventDefault();
-
-      var initialCoordinates = {
-        x: evt.clientX,
-        y: evt.clientY
-      };
-
-      var onMouseMove = function (moveEvt) {
-        moveEvt.preventDefault();
-
-        var shift = {
-          x: initialCoordinates.x - moveEvt.clientX,
-          y: initialCoordinates.y - moveEvt.clientY
-        };
-
-        initialCoordinates = {
-          x: moveEvt.clientX,
-          y: moveEvt.clientY
-        };
-
-        minPin.style.top = (minPin.offsetTop - shift.y) + 'px';
-        minPin.style.left = (minPin.offsetLeft - shift.x) + 'px';
-      };
-
-      var onMouseUp = function (upEvt) {
-        upEvt.preventDefault();
-
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      };
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mousemove', writeDownCoordinates);
-      document.addEventListener('mouseup', onMouseUp);
-      document.addEventListener('mouseup', writeDownCoordinates);
-
-    });
-
     minPin.addEventListener('mousedown', activatePage, {once: true});
     minPin.addEventListener('keydown', activatePage, {once: true});
     minPin.addEventListener('mousedown', writeDownCoordinates);
@@ -182,13 +183,16 @@
 
     minPin.addEventListener('mousedown', deleteActivator, {once: true});
     minPin.addEventListener('keydown', deleteActivator, {once: true});
+
   };
 
   window.pageCondition = {
     disablePage: disablePage,
+    activatePage: activatePage,
+    getError: getError,
     listenToPinMovement: listenToPinMovement,
+    writeDownCoordinates: writeDownCoordinates,
   };
-
 }());
 
 window.pageCondition.listenToPinMovement();
