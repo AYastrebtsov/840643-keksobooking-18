@@ -58,7 +58,7 @@
 
     enableArray(FIELDSETS);
     enableArray(SELECTS);
-    window.place.visualizePins(window.backend.getLocations());
+    window.place.visualizePins(window.tet(window.place.getLocations, window.pageCondition.getMessage));
   };
 
   var getPosition = function () {
@@ -140,23 +140,25 @@
     }
   };
 
-  var getError = function () {
-    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-    var error = errorTemplate.cloneNode(true);
-    var page = document.querySelector('main');
-    page.appendChild(error);
-    var errorText = document.querySelector('.error__message');
 
-    var closeError = function (evt) {
-      if (evt.target !== errorText) {
-        page.removeChild(error);
+  var getMessage = function (pageElement) {
+    var element = pageElement;
+    var messageTemplate = document.querySelector('#' + element).content.querySelector('.' + element);
+    var message = messageTemplate.cloneNode(true);
+    var page = document.querySelector('main');
+    page.appendChild(message);
+    var massageText = document.querySelector('.' + element + '__message');
+
+    var closeMessage = function (evt) {
+      if (evt.target !== massageText) {
+        page.removeChild(message);
       }
     };
 
-    error.addEventListener('click', closeError, {once: true});
+    message.addEventListener('click', closeMessage, {once: true});
     window.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === 27 && document.querySelector('.error')) {
-        page.removeChild(error);
+      if (evt.keyCode === 27 && document.querySelector('.' + element)) {
+        page.removeChild(message);
       }
     });
 
@@ -189,7 +191,7 @@
   window.pageCondition = {
     disablePage: disablePage,
     activatePage: activatePage,
-    getError: getError,
+    getMessage: getMessage,
     listenToPinMovement: listenToPinMovement,
     writeDownCoordinates: writeDownCoordinates,
   };

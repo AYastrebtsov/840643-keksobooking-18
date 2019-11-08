@@ -9,11 +9,21 @@
     'palace': 'Дворец'
   };
 
-  var LOCATIONS_AMOUNT = 8;
+  var LOCATIONS_AMOUNT = 5;
   var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
   var X_OFFSET = 25;
   var Y_OFFSET = 70;
 
+
+  var getLocations = function (response) {
+
+    var locations = [];
+
+    for (var j = 0; j < LOCATIONS_AMOUNT; j++) {
+      locations.push(response[j]);
+    }
+    return locations;
+  };
 
   var visualizePins = function (locations) {
 
@@ -55,7 +65,7 @@
       }
     }
 
-    if (typeof (locations) !== 'undefined') {
+    // if (typeof (locations) !== 'undefined') {
       var cardFragment = document.createDocumentFragment();
       var fragment = document.createDocumentFragment();
 
@@ -90,10 +100,11 @@
       document.querySelector('.map').classList.remove('map--faded');
       document.querySelector('.map__pins').appendChild(fragment);
       document.querySelector('.map__filters-container').before(cardFragment);
-    }
+    // }
   };
 
   window.place = {
+    getLocations: getLocations,
     visualizePins: visualizePins,
     LOCATIONS_AMOUNT: LOCATIONS_AMOUNT,
     ACCOMODATION_TYPE: ACCOMODATION_TYPE,
