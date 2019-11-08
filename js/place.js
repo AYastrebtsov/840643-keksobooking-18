@@ -65,11 +65,11 @@
       }
     }
 
-    // if (typeof (locations) !== 'undefined') {
+    if (typeof (locations) !== 'undefined') {
       var cardFragment = document.createDocumentFragment();
       var fragment = document.createDocumentFragment();
 
-      for (var f = 0; f < locations.length; f++) {
+      for (var f = 0; f < LOCATIONS_AMOUNT; f++) {
         var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
         var pin = pinTemplate.cloneNode(true);
 
@@ -100,7 +100,7 @@
       document.querySelector('.map').classList.remove('map--faded');
       document.querySelector('.map__pins').appendChild(fragment);
       document.querySelector('.map__filters-container').before(cardFragment);
-    // }
+    }
   };
 
   window.place = {

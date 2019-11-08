@@ -58,7 +58,7 @@
 
     enableArray(FIELDSETS);
     enableArray(SELECTS);
-    window.place.visualizePins(window.tet(window.place.getLocations, window.pageCondition.getMessage));
+    window.get(window.place.visualizePins, window.pageCondition.getMessage);
   };
 
   var getPosition = function () {
