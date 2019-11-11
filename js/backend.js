@@ -8,7 +8,8 @@
 
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        success(xhr.response);
+        success(xhr.response.splice(0, 5));
+        window.filter.loader(xhr.response);
       } else {
         message('error');
       }
@@ -16,9 +17,7 @@
 
     xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
     xhr.send();
-
   };
-
 
   window.send = function (url, data, message) {
     var xhr = new XMLHttpRequest();
