@@ -15,16 +15,6 @@
   var Y_OFFSET = 70;
 
 
-  var getLocations = function (response) {
-
-    var locations = [];
-
-    for (var j = 0; j < LOCATIONS_AMOUNT; j++) {
-      locations.push(response[j]);
-    }
-    return locations;
-  };
-
   var visualizePins = function (locations) {
 
     function writeDownFeatures() {
@@ -69,7 +59,7 @@
       var cardFragment = document.createDocumentFragment();
       var fragment = document.createDocumentFragment();
 
-      for (var f = 0; f < LOCATIONS_AMOUNT; f++) {
+      for (var f = 0; f < locations.length; f++) {
         var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
         var pin = pinTemplate.cloneNode(true);
 
@@ -95,6 +85,7 @@
         pin.querySelector('.map__pin img').setAttribute('alt', locations[f].offer.title);
         fragment.appendChild(pin);
         cardFragment.appendChild(card);
+
       }
 
       document.querySelector('.map').classList.remove('map--faded');
@@ -104,7 +95,6 @@
   };
 
   window.place = {
-    getLocations: getLocations,
     visualizePins: visualizePins,
     LOCATIONS_AMOUNT: LOCATIONS_AMOUNT,
     ACCOMODATION_TYPE: ACCOMODATION_TYPE,

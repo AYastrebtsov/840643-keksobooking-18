@@ -189,6 +189,7 @@
   };
 
   window.pageCondition = {
+    deletePins: deletePins,
     disablePage: disablePage,
     activatePage: activatePage,
     getMessage: getMessage,
