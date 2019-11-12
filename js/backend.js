@@ -15,6 +15,15 @@
       }
     });
 
+    xhr.addEventListener('error', function () {
+      message('error');
+    });
+    xhr.addEventListener('timeout', function () {
+      message('error');
+    });
+
+    xhr.timeout = 1000;
+
     xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
     xhr.send();
   };
@@ -31,6 +40,15 @@
         message('error');
       }
     });
+
+    xhr.addEventListener('error', function () {
+      message('error');
+    });
+    xhr.addEventListener('timeout', function () {
+      message('error');
+    });
+
+    xhr.timeout = 1000;
 
     xhr.open('POST', url);
     xhr.send(data);

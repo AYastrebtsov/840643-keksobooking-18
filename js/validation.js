@@ -14,7 +14,6 @@ var ACCOMODATION_TO_PRICE = {
   3: 10000
 };
 
-var guestsSelector = document.querySelector('#capacity');
 var guests = document.querySelectorAll('#capacity option');
 
 var getRidOfSelected = function (array) {
@@ -29,7 +28,14 @@ var getSelected = function (array) {
   for (var d = 0; d < array.length; d++) {
     if (!array[d].hasAttribute('disabled')) {
       array[d].selected = true;
-      break;
+    }
+  }
+};
+
+var getDisabled = function (array) {
+  for (var d = 0; d < array.length; d++) {
+    if (!array[d].hasAttribute('selected')) {
+      array[d].disabled = true;
     }
   }
 };
@@ -44,12 +50,6 @@ var onChangeRoomsSelectHandler = function () {
     } else {
       guests[i].disabled = true;
     }
-  }
-
-  if (guests[selectedRoom].hasAttribute('disabled')) {
-    guestsSelector.setCustomValidity('Такой вариант аренды недоступен');
-  } else {
-    guestsSelector.setCustomValidity('');
   }
 
   getRidOfSelected(guests);
@@ -102,6 +102,7 @@ var onChangeAccomodationSelectHandler = function () {
 
 var rooms = document.querySelector('#room_number');
 rooms.addEventListener('change', onChangeRoomsSelectHandler);
+getDisabled(guests);
 
 var accomodation = document.querySelector('#type');
 accomodation.addEventListener('change', onChangeAccomodationSelectHandler);
