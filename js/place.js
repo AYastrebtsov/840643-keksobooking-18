@@ -60,38 +60,82 @@
       var fragment = document.createDocumentFragment();
 
       for (var f = 0; f < locations.length; f++) {
-        var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-        var pin = pinTemplate.cloneNode(true);
+        if (Object.keys(locations[f]).length !== 0) {
+          var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+          var pin = pinTemplate.cloneNode(true);
 
-        var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-        var card = cardTemplate.cloneNode(true);
+          var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+          var card = cardTemplate.cloneNode(true);
 
-        pin.style.left = locations[f].location.x + 'px';
-        pin.style.top = locations[f].location.y + 'px';
+          pin.style.left = locations[f].location.x + 'px';
+          pin.style.top = locations[f].location.y + 'px';
 
-        card.querySelector('.popup__title').textContent = locations[f].offer.title;
-        card.querySelector('.popup__text--address').textContent = locations[f].offer.address;
-        card.querySelector('.popup__text--price').textContent = locations[f].offer.price + '₽/ночь.';
-        card.querySelector('.popup__type').textContent = mapOfferType[locations[f].offer.type];
-        card.querySelector('.popup__text--capacity'). textContent = locations[f].offer.rooms + ' комнаты для ' + locations[f].offer.guests + ' гостей';
-        card.querySelector('.popup__text--time').textContent = 'Заезд после ' + locations[f].offer.checkin + ', выезд до ' + locations[f].offer.checkout;
-        writeDownFeatures();
-        card.querySelector('.popup__description').textContent = locations[f].offer.description;
-        writeDownPhotos();
-        card.querySelector('.popup__avatar').src = locations[f].author.avatar;
-        card.classList.add('hidden');
+          if (locations[f].offer.title) {
+            card.querySelector('.popup__title').textContent = locations[f].offer.title;
+          } else {
+            card.querySelector('.popup__title').style.display = 'none';
+          }
+          if (locations[f].offer.address) {
+            card.querySelector('.popup__text--address').textContent = locations[f].offer.address;
+          } else {
+            card.querySelector('.popup__text--address').style.display = 'none';
+          }
+          if (locations[f].offer.price) {
+            card.querySelector('.popup__text--price').textContent = locations[f].offer.price + '₽/ночь.';
+          } else {
+            card.querySelector('.popup__text--price').style.display = 'none';
+          }
+          if (locations[f].offer.type) {
+            card.querySelector('.popup__type').textContent = mapOfferType[locations[f].offer.type];
+          } else {
+            card.querySelector('.popup__type').style.display = 'none';
+          }
+          if (locations[f].offer.rooms && locations[f].offer.guests) {
+            card.querySelector('.popup__text--capacity').textContent = locations[f].offer.rooms + ' комнаты для ' + locations[f].offer.guests + ' гостей';
+          } else {
+            card.querySelector('.popup__text--capacity').style.display = 'none';
+          }
+          if (locations[f].offer.checkin !== '0:00' && locations[f].offer.checkout !== '0:00') {
+            card.querySelector('.popup__text--time').textContent = 'Заезд после ' + locations[f].offer.checkin + ', выезд до ' + locations[f].offer.checkout;
+          } else {
+            card.querySelector('.popup__text--time').style.display = 'none';
+          }
+          if (locations[f].offer.features.length !== 0) {
+            writeDownFeatures();
+          } else {
+            card.querySelector('.popup__features').style.display = 'none';
+          }
+          if (locations[f].offer.description) {
+            card.querySelector('.popup__description').textContent = locations[f].offer.description;
+          } else {
+            card.querySelector('.popup__description').style.display = 'none';
+          }
+          if (locations[f].offer.photos.length !== 0) {
+            writeDownPhotos();
+          } else {
+            card.querySelector('.popup__photos').style.display = 'none';
+          }
+          if (locations[f].author.avatar) {
+            card.querySelector('.popup__avatar').src = locations[f].author.avatar;
+          } else {
+            card.querySelector('.popup__avatar').style.display = 'none';
+          }
+          card.classList.add('hidden');
 
-        pin.querySelector('.map__pin img').setAttribute('src', locations[f].author.avatar);
-        pin.querySelector('.map__pin img').setAttribute('alt', locations[f].offer.title);
-        fragment.appendChild(pin);
-        cardFragment.appendChild(card);
-
+          pin.querySelector('.map__pin img').setAttribute('src', locations[f].author.avatar);
+          pin.querySelector('.map__pin img').setAttribute('alt', locations[f].offer.title);
+          fragment.appendChild(pin);
+          cardFragment.appendChild(card);
+        }
       }
 
       document.querySelector('.map').classList.remove('map--faded');
       document.querySelector('.map__pins').appendChild(fragment);
       document.querySelector('.map__filters-container').before(cardFragment);
+      window.pageCondition.listenPins();
     }
+
+
   };
 
   window.place = {
