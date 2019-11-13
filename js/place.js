@@ -2,7 +2,7 @@
 
 (function () {
 
-  var mapOfferType = {
+  var OfferTypeMap = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
     'house': 'Дом',
@@ -10,7 +10,7 @@
   };
 
   var LOCATIONS_AMOUNT = 5;
-  var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+  var ACCOMODATION_TYPES = ['palace', 'flat', 'house', 'bungalo'];
   var X_OFFSET = 25;
   var Y_OFFSET = 70;
 
@@ -19,7 +19,7 @@
 
     function writeDownFeatures() {
       var generatedList = locations[f].offer.features;
-      var finalList = [];
+      var finalFeatures = [];
 
       for (var q = 0; q < generatedList.length; q++) {
         var templateItems = card.querySelectorAll('.popup__features .popup__feature');
@@ -27,14 +27,14 @@
 
         for (var g = 0; g < templateItems.length; g++) {
           if (generatedItem.classList === templateItems[g].classList) {
-            finalList.push(templateItems[g]);
+            finalFeatures.push(templateItems[g]);
           }
         }
       }
       card.querySelector('.popup__features').innerHTML = '';
 
-      for (var x = 0; x < finalList.length; x++) {
-        card.querySelector('.popup__features').appendChild(finalList[x]);
+      for (var x = 0; x < finalFeatures.length; x++) {
+        card.querySelector('.popup__features').appendChild(finalFeatures[x]);
       }
     }
 
@@ -86,7 +86,7 @@
             card.querySelector('.popup__text--price').style.display = 'none';
           }
           if (locations[f].offer.type) {
-            card.querySelector('.popup__type').textContent = mapOfferType[locations[f].offer.type];
+            card.querySelector('.popup__type').textContent = OfferTypeMap[locations[f].offer.type];
           } else {
             card.querySelector('.popup__type').style.display = 'none';
           }
@@ -134,14 +134,12 @@
       document.querySelector('.map__filters-container').before(cardFragment);
       window.pageCondition.listenPins();
     }
-
-
   };
 
   window.place = {
     visualizePins: visualizePins,
     LOCATIONS_AMOUNT: LOCATIONS_AMOUNT,
-    ACCOMODATION_TYPE: ACCOMODATION_TYPE,
+    ACCOMODATION_TYPE: ACCOMODATION_TYPES,
     X_OFFSET: X_OFFSET,
     Y_OFFSET: Y_OFFSET
   };
