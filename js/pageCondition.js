@@ -4,10 +4,11 @@
 
   var MAIN_PIN_INITIAL_X = 570;
   var MAIN_PIN_INITIAL_Y = 375;
+  var HORIZONTAL_CAP = 130;
+  var VERTICAL_CAP = 630;
   var MAIN_PIN_OFFSET = 33;
   var FIELDSETS = document.querySelectorAll('fieldset');
   var SELECTS = document.querySelectorAll('select');
-
 
   var disableArray = function (array) {
     for (var i = 0; i < array.length; i++) {
@@ -63,7 +64,7 @@
     enableArray(SELECTS);
   };
 
-  var activationCaller = function () {
+  var callActivation = function () {
     window.get(activatePage, getMessage);
   };
 
@@ -83,44 +84,45 @@
   };
 
   var writeDownInitialCoordinates = function () {
-    var pinLocation = getPosition();
+    var locatePin = getPosition();
     var coordinatesField = document.querySelector('#address');
-    coordinatesField.value = pinLocation[0] + '; ' + pinLocation[1] + ';';
+    coordinatesField.value = locatePin[0] + '; ' + locatePin[1] + ';';
   };
 
   var writeDownCoordinates = function () {
-    var pinLocation = getPosition();
+    var locatePin = getPosition();
     var map = document.querySelector('.map__pins');
     var soughtPin = document.querySelector('.map__pin--main');
 
-    if (pinLocation[0] < -MAIN_PIN_OFFSET) {
+    if (locatePin[0] < -MAIN_PIN_OFFSET) {
       soughtPin.style.left = '-33px';
-    } else if (pinLocation[0] > map.offsetWidth - MAIN_PIN_OFFSET) {
+    } else if (locatePin[0] > map.offsetWidth - MAIN_PIN_OFFSET) {
       soughtPin.style.left = map.offsetWidth - MAIN_PIN_OFFSET + 'px';
     }
 
-    if (pinLocation[1] < 130 - MAIN_PIN_OFFSET) {
-      soughtPin.style.top = 130 - MAIN_PIN_OFFSET + 'px';
-    } else if (pinLocation[1] > 630 - MAIN_PIN_OFFSET) {
-      soughtPin.style.top = 630 - MAIN_PIN_OFFSET + 'px';
+    if (locatePin[1] < HORIZONTAL_CAP - MAIN_PIN_OFFSET) {
+      soughtPin.style.top = HORIZONTAL_CAP - MAIN_PIN_OFFSET + 'px';
+    } else if (locatePin[1] > VERTICAL_CAP - MAIN_PIN_OFFSET) {
+      soughtPin.style.top = VERTICAL_CAP - MAIN_PIN_OFFSET + 'px';
     }
 
     var coordinatesField = document.querySelector('#address');
-    coordinatesField.value = (pinLocation[0] + MAIN_PIN_OFFSET) + ', ' + (pinLocation[1] + MAIN_PIN_OFFSET) + ',';
+    coordinatesField.value = (locatePin[0] + MAIN_PIN_OFFSET) + ', ' + (locatePin[1] + MAIN_PIN_OFFSET) + ',';
   };
 
 
   var listenPins = function () {
-    var clickedPin = Array.from(document.querySelectorAll('.map__pin'));
+    var clickedPins = Array.from(document.querySelectorAll('.map__pin'));
+    clickedPins.shift();
     var cardsList = document.querySelectorAll('.map__card');
-    var closeBtns = document.querySelectorAll('.popup__close');
+    var closeButtons = document.querySelectorAll('.popup__close');
 
     var showCard = function (evt) {
 
       var hideCard = function () {
-        closeBtns[targetedCard - 1].parentNode.classList.add('hidden');
+        closeButtons[targetedCard].parentNode.classList.add('hidden');
         if (evt.keyCode === 27) {
-          closeBtns[targetedCard - 1].parentNode.classList.add('hidden');
+          closeButtons[targetedCard].parentNode.classList.add('hidden');
         }
       };
 
@@ -130,15 +132,15 @@
         }
       }
 
-      var targetedCard = clickedPin.indexOf(evt.currentTarget);
-      cardsList[targetedCard - 1].classList.remove('hidden');
-      closeBtns[targetedCard - 1].addEventListener('click', hideCard);
+      var targetedCard = clickedPins.indexOf(evt.currentTarget);
+      cardsList[targetedCard].classList.remove('hidden');
+      closeButtons[targetedCard].addEventListener('click', hideCard);
       document.addEventListener('keydown', hideCard);
     };
 
-    for (var k = 0; k < clickedPin.length; k++) {
-      if (!clickedPin[k].classList.contains('map__pin--main')) {
-        clickedPin[k].addEventListener('click', showCard);
+    for (var k = 0; k < clickedPins.length; k++) {
+      if (!clickedPins[k].classList.contains('map__pin--main')) {
+        clickedPins[k].addEventListener('click', showCard);
       }
     }
   };
@@ -155,8 +157,8 @@
       if (evt.target !== massageText) {
         message.removeEventListener('click', closeMessage);
         page.removeChild(message);
-        document.querySelector('.map__pin--main').addEventListener('mousedown', activationCaller, {once: true});
-        document.querySelector('.map__pin--main').addEventListener('keydown', activationCaller, {once: true});
+        document.querySelector('.map__pin--main').addEventListener('mousedown', callActivation, {once: true});
+        document.querySelector('.map__pin--main').addEventListener('keydown', callActivation, {once: true});
       }
     };
 
@@ -164,31 +166,29 @@
     window.addEventListener('keydown', function (evt) {
       if (evt.keyCode === 27 && document.querySelector('.' + element)) {
         message.remove();
-        document.querySelector('.map__pin--main').addEventListener('mousedown', activationCaller, {once: true});
-        document.querySelector('.map__pin--main').addEventListener('keydown', activationCaller, {once: true});
+        document.querySelector('.map__pin--main').addEventListener('mousedown', callActivation, {once: true});
+        document.querySelector('.map__pin--main').addEventListener('keydown', callActivation, {once: true});
       }
     });
   };
-
 
   var listenToPinMovement = function () {
 
     var deleteActivator = function (evt) {
       if (evt.type === 'keydown') {
-        document.querySelector('.map__pin--main').removeEventListener('mousedown', activationCaller, {once: true});
+        document.querySelector('.map__pin--main').removeEventListener('mousedown', callActivation, {once: true});
       } else {
-        document.querySelector('.map__pin--main').removeEventListener('keydown', activationCaller, {once: true});
+        document.querySelector('.map__pin--main').removeEventListener('keydown', callActivation, {once: true});
       }
     };
 
-    document.querySelector('.map__pin--main').addEventListener('mousedown', activationCaller, {once: true});
-    document.querySelector('.map__pin--main').addEventListener('keydown', activationCaller, {once: true});
+    document.querySelector('.map__pin--main').addEventListener('mousedown', callActivation, {once: true});
+    document.querySelector('.map__pin--main').addEventListener('keydown', callActivation, {once: true});
     document.querySelector('.map__pin--main').addEventListener('mousedown', writeDownCoordinates);
     document.querySelector('.map__pin--main').addEventListener('mousedown', deleteActivator);
     document.querySelector('.map__pin--main').addEventListener('keydown', deleteActivator);
 
   };
-
 
   document.addEventListener('DOMContentLoaded', writeDownInitialCoordinates);
   disableArray(FIELDSETS);
@@ -207,7 +207,6 @@
     listenToPinMovement: listenToPinMovement,
     writeDownCoordinates: writeDownCoordinates,
     listenPins: listenPins
-
   };
 
 }());
