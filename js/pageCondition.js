@@ -56,7 +56,10 @@
   };
 
   var activatePage = function (data) {
-    window.place.visualizePins(data);
+    window.filter.saveData(data);
+    window.place.visualizePins(window.filter.serverData);
+    window.filter.updateData();
+
     document.querySelector('.map__filters').classList.remove('ad-form--disabled');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
@@ -164,6 +167,7 @@
 
     message.addEventListener('click', closeMessage);
     window.addEventListener('keydown', function (evt) {
+      evt.preventDefault();
       if (evt.keyCode === 27 && document.querySelector('.' + element)) {
         message.remove();
         document.querySelector('.map__pin--main').addEventListener('mousedown', callActivation, {once: true});
