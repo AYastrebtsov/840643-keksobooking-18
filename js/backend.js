@@ -8,8 +8,7 @@
 
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        success(xhr.response.splice(0, 5));
-        window.filter.loader(xhr.response);
+        success(xhr.response);
       } else {
         message('error');
       }

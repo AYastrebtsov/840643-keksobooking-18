@@ -4,7 +4,7 @@
 
   var serverData = [];
 
-  var load = function (data) {
+  var saveData = function (data) {
     serverData = data;
     return serverData;
   };
@@ -97,6 +97,8 @@
   });
 
   window.filter = {
-    loader: load
+    saveData: saveData,
+    updateData: updateData,
+    serverData: serverData
   };
 })();
