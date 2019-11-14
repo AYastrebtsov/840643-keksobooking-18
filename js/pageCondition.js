@@ -18,7 +18,7 @@
 
   var enableArray = function (array) {
     for (var i = 0; i < array.length; i++) {
-      array[i].removeAttribute('disabled', 'disabled');
+      array[i].disabled = false;
     }
   };
 
@@ -26,13 +26,13 @@
     var pins = document.querySelectorAll('.map__pin');
     var cards = document.querySelectorAll('.map__card');
 
-    for (var v = 0; v < cards.length; v++) {
-      cards[v].remove();
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].remove();
     }
 
-    for (var d = 0; d < pins.length; d++) {
-      if (!pins[d].classList.contains('map__pin--main')) {
-        pins[d].remove();
+    for (var k = 0; k < pins.length; k++) {
+      if (!pins[k].classList.contains('map__pin--main')) {
+        pins[k].remove();
       }
     }
   };
@@ -41,8 +41,8 @@
     document.querySelector('.map').classList.add('map--faded');
     document.querySelector('.map__filters').classList.add('ad-form--disabled');
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
-    document.querySelector('#price').min = window.validation.ACCOMODATION_TO_PRICE[1];
-    document.querySelector('#price').placeholder = window.validation.ACCOMODATION_TO_PRICE[1];
+    document.querySelector('#price').min = window.validation.priceForAccomodationMap[1];
+    document.querySelector('#price').placeholder = window.validation.priceForAccomodationMap[1];
 
     deletePins();
     disableArray(FIELDSETS);
@@ -55,20 +55,14 @@
     window.pageCondition.listenToPinMovement();
   };
 
-  var activatePage = function (data) {
-    window.filter.saveData(data);
-    window.place.visualizePins(window.filter.serverData);
-    window.filter.updateData();
-
+  var activatePage = function () {
+    document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.map__filters').classList.remove('ad-form--disabled');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
     enableArray(FIELDSETS);
     enableArray(SELECTS);
-  };
-
-  var callActivation = function () {
-    window.get(activatePage, getMessage);
+    window.backend.get(window.place.visualizePins, getMessage, window.filter.saveData);
   };
 
   var getPosition = function () {
@@ -120,30 +114,32 @@
     var cardsList = document.querySelectorAll('.map__card');
     var closeButtons = document.querySelectorAll('.popup__close');
 
-    var showCard = function (evt) {
-
-      var hideCard = function () {
+    var onPinClick = function (evt) {
+      var onCloseCrossClick = function () {
         closeButtons[targetedCard].parentNode.classList.add('hidden');
+        clickedPins[targetedCard].classList.remove('map__pin--active');
         if (evt.keyCode === 27) {
           closeButtons[targetedCard].parentNode.classList.add('hidden');
         }
       };
 
-      for (var h = 0; h < cardsList.length; h++) {
-        if (!cardsList[h].classList.contains('hidden')) {
-          cardsList[h].classList.add('hidden');
+      for (var i = 0; i < cardsList.length; i++) {
+        if (!cardsList[i].classList.contains('hidden') && clickedPins[i].classList.contains('map__pin--active')) {
+          cardsList[i].classList.add('hidden');
+          clickedPins[i].classList.remove('map__pin--active');
         }
       }
 
       var targetedCard = clickedPins.indexOf(evt.currentTarget);
+      clickedPins[targetedCard].classList.add('map__pin--active');
       cardsList[targetedCard].classList.remove('hidden');
-      closeButtons[targetedCard].addEventListener('click', hideCard);
-      document.addEventListener('keydown', hideCard);
+      closeButtons[targetedCard].addEventListener('click', onCloseCrossClick);
+      document.addEventListener('keydown', onCloseCrossClick);
     };
 
     for (var k = 0; k < clickedPins.length; k++) {
       if (!clickedPins[k].classList.contains('map__pin--main')) {
-        clickedPins[k].addEventListener('click', showCard);
+        clickedPins[k].addEventListener('click', onPinClick);
       }
     }
   };
@@ -159,35 +155,36 @@
     var closeMessage = function (evt) {
       if (evt.target !== massageText) {
         message.removeEventListener('click', closeMessage);
+        window.removeEventListener('keydown', onEscPress);
         page.removeChild(message);
-        document.querySelector('.map__pin--main').addEventListener('mousedown', callActivation, {once: true});
-        document.querySelector('.map__pin--main').addEventListener('keydown', callActivation, {once: true});
+      }
+    };
+
+    var onEscPress = function (evt) {
+      evt.preventDefault();
+      if (evt.keyCode === 27 && document.querySelector('.' + element)) {
+        message.removeEventListener('click', closeMessage);
+        window.removeEventListener('keydown', onEscPress);
+        message.remove();
       }
     };
 
     message.addEventListener('click', closeMessage);
-    window.addEventListener('keydown', function (evt) {
-      evt.preventDefault();
-      if (evt.keyCode === 27 && document.querySelector('.' + element)) {
-        message.remove();
-        document.querySelector('.map__pin--main').addEventListener('mousedown', callActivation, {once: true});
-        document.querySelector('.map__pin--main').addEventListener('keydown', callActivation, {once: true});
-      }
-    });
+    window.addEventListener('keydown', onEscPress);
   };
 
   var listenToPinMovement = function () {
 
     var deleteActivator = function (evt) {
       if (evt.type === 'keydown') {
-        document.querySelector('.map__pin--main').removeEventListener('mousedown', callActivation, {once: true});
+        document.querySelector('.map__pin--main').removeEventListener('mousedown', activatePage, {once: true});
       } else {
-        document.querySelector('.map__pin--main').removeEventListener('keydown', callActivation, {once: true});
+        document.querySelector('.map__pin--main').removeEventListener('keydown', activatePage, {once: true});
       }
     };
 
-    document.querySelector('.map__pin--main').addEventListener('mousedown', callActivation, {once: true});
-    document.querySelector('.map__pin--main').addEventListener('keydown', callActivation, {once: true});
+    document.querySelector('.map__pin--main').addEventListener('mousedown', activatePage, {once: true});
+    document.querySelector('.map__pin--main').addEventListener('keydown', activatePage, {once: true});
     document.querySelector('.map__pin--main').addEventListener('mousedown', writeDownCoordinates);
     document.querySelector('.map__pin--main').addEventListener('mousedown', deleteActivator);
     document.querySelector('.map__pin--main').addEventListener('keydown', deleteActivator);

@@ -2,14 +2,14 @@
 
 (function () {
 
-  var RoomsForGuestsMap = {
+  var roomsForGuestsMap = {
     0: ['для 1 гостя'],
     1: ['для 1 гостя', 'для 2 гостей'],
     2: ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
     3: ['не для гостей']
   };
 
-  var PriceForAccomodationMap = {
+  var priceForAccomodationMap = {
     0: 0,
     1: 1000,
     2: 5000,
@@ -19,32 +19,32 @@
   var guests = document.querySelectorAll('#capacity option');
 
   var getRidOfSelected = function (array) {
-    for (var s = 0; s < array.length; s++) {
-      if (array[s].hasAttribute('selected')) {
-        array[s].selected = false;
+    for (var i = 0; i < array.length; i++) {
+      if (array[i].hasAttribute('selected')) {
+        array[i].selected = false;
       }
     }
   };
 
   var getSelected = function (array) {
-    for (var d = 0; d < array.length; d++) {
-      if (!array[d].hasAttribute('disabled')) {
-        array[d].selected = true;
+    for (var i = 0; i < array.length; i++) {
+      if (!array[i].hasAttribute('disabled')) {
+        array[i].selected = true;
       }
     }
   };
 
   var getDisabled = function (array) {
-    for (var d = 0; d < array.length; d++) {
-      if (!array[d].hasAttribute('selected')) {
-        array[d].disabled = true;
+    for (var i = 0; i < array.length; i++) {
+      if (!array[i].hasAttribute('selected')) {
+        array[i].disabled = true;
       }
     }
   };
 
   var getRoomsChanged = function () {
     var selectedRoom = document.querySelector('#room_number').selectedIndex;
-    var avaliableOptions = RoomsForGuestsMap[selectedRoom];
+    var avaliableOptions = roomsForGuestsMap[selectedRoom];
 
     for (var i = 0; i < guests.length; i++) {
       if (avaliableOptions.includes(guests[i].innerText)) {
@@ -75,19 +75,19 @@
     if (evt.target.id === 'timein') {
 
       if (selectedCheckIn !== selectedCheckOut) {
-        for (var q = 0; q < checkInTimes.length; q++) {
-          if (checkOutTimes[q].value === selectedCheckIn) {
-            checkOutTimes[q].selected = true;
-            checkInTimes[q].selected = true;
+        for (var i = 0; i < checkInTimes.length; i++) {
+          if (checkOutTimes[i].value === selectedCheckIn) {
+            checkOutTimes[i].selected = true;
+            checkInTimes[i].selected = true;
           }
         }
       }
     } else {
       if (selectedCheckOut !== selectedCheckIn) {
-        for (var w = 0; w < checkOutTimes.length; w++) {
-          if (checkInTimes[w].value === selectedCheckOut) {
-            checkInTimes[w].selected = true;
-            checkOutTimes[w].selected = true;
+        for (var k = 0; k < checkOutTimes.length; k++) {
+          if (checkInTimes[k].value === selectedCheckOut) {
+            checkInTimes[k].selected = true;
+            checkOutTimes[k].selected = true;
           }
         }
       }
@@ -98,8 +98,8 @@
     var selectedAccomodation = document.querySelector('#type').selectedIndex;
     var accomodationPrice = document.querySelector('#price');
 
-    accomodationPrice.min = PriceForAccomodationMap[selectedAccomodation];
-    accomodationPrice.placeholder = PriceForAccomodationMap[selectedAccomodation];
+    accomodationPrice.min = priceForAccomodationMap[selectedAccomodation];
+    accomodationPrice.placeholder = priceForAccomodationMap[selectedAccomodation];
   };
 
   var room = document.querySelector('#room_number');
@@ -115,7 +115,7 @@
 
 
   window.validation = {
-    ACCOMODATION_TO_PRICE: PriceForAccomodationMap
+    priceForAccomodationMap: priceForAccomodationMap
   };
 
 }());
