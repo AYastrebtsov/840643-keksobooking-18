@@ -14,11 +14,13 @@
     high: 50000
   };
 
-  var housing = document.querySelector('#housing-type');
-  var pricing = document.querySelector('#housing-price');
-  var rooms = document.querySelector('#housing-rooms');
-  var guests = document.querySelector('#housing-guests');
-  var features = document.querySelectorAll('input[type=checkbox]');
+  var filters = document.querySelector('.map__filters');
+
+  var housing = filters.querySelector('#housing-type');
+  var pricing = filters.querySelector('#housing-price');
+  var rooms = filters.querySelector('#housing-rooms');
+  var guests = filters.querySelector('#housing-guests');
+  var features = filters.querySelectorAll('input[type=checkbox]');
 
 
   var updateData = function () {
