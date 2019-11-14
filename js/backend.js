@@ -26,7 +26,7 @@
 
     xhr.timeout = 1000;
 
-    xhr.open('GET', 'https://js.dump.academy/keksobooking/dat');
+    xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
     xhr.send();
   };
 
