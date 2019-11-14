@@ -2,7 +2,7 @@
 
 (function () {
 
-  var get = function (success, message, load) {
+  var get = function (success, message, load, activator) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -10,8 +10,10 @@
       if (xhr.status === 200) {
         success(xhr.response);
         load(xhr.response);
+        activator();
       } else {
         message('error');
+
       }
     });
 
@@ -24,7 +26,7 @@
 
     xhr.timeout = 1000;
 
-    xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
+    xhr.open('GET', 'https://js.dump.academy/keksobooking/dat');
     xhr.send();
   };
 
