@@ -9,9 +9,9 @@
     return serverData;
   };
 
-  var priceLimitMap = {
-    low: 10000,
-    high: 50000
+  var PriceLimit = {
+    LOW: 10000,
+    HIGHT: 50000
   };
 
   var filters = document.querySelector('.map__filters');
@@ -29,9 +29,9 @@
 
     var filtered = filteredData.filter(function (item) {
       var priceFilterValues = {
-        'middle': item.offer.price >= priceLimitMap.low && item.offer.price <= priceLimitMap.high,
-        'low': item.offer.price <= priceLimitMap.low,
-        'high': item.offer.price >= priceLimitMap.high
+        'middle': item.offer.price >= PriceLimit.LOW && item.offer.price <= PriceLimit.HIGHT,
+        'low': item.offer.price <= PriceLimit.LOW,
+        'high': item.offer.price >= PriceLimit.HIGHT
       };
       var featuresCheked = document.querySelectorAll('input[type=checkbox]:checked');
 

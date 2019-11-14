@@ -7,8 +7,15 @@
   var HORIZONTAL_CAP = 130;
   var VERTICAL_CAP = 630;
   var MAIN_PIN_OFFSET = 33;
-  var FIELDSETS = document.querySelectorAll('fieldset');
-  var SELECTS = document.querySelectorAll('select');
+
+
+  var mapContainer = document.querySelector('.map');
+  var mapFieldsets = mapContainer.querySelectorAll('fieldset');
+  var mapSelects = mapContainer.querySelectorAll('select');
+
+  var noticeContainer = document.querySelector('.notice');
+  var noticeFieldsets = noticeContainer.querySelectorAll('fieldset');
+  var noticeSelects = noticeContainer.querySelectorAll('select');
 
   var disableArray = function (array) {
     for (var i = 0; i < array.length; i++) {
@@ -39,14 +46,17 @@
 
   var disablePage = function () {
     document.querySelector('.map').classList.add('map--faded');
-    document.querySelector('.map__filters').classList.add('ad-form--disabled');
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
+    document.querySelector('.map__filters').classList.add('ad-form--disabled');
     document.querySelector('#price').min = window.validation.priceForAccomodationMap[1];
     document.querySelector('#price').placeholder = window.validation.priceForAccomodationMap[1];
 
     deletePins();
-    disableArray(FIELDSETS);
-    disableArray(SELECTS);
+    disableArray(mapFieldsets);
+    disableArray(mapSelects);
+
+    disableArray(noticeFieldsets);
+    disableArray(noticeSelects);
 
     document.querySelector('.ad-form').reset();
     document.querySelector('.map__filters').reset();
@@ -55,14 +65,19 @@
     window.pageCondition.listenToPinMovement();
   };
 
+  var activateFilter = function () {
+    enableArray(mapFieldsets);
+    enableArray(mapSelects);
+    document.querySelector('.map__filters').classList.remove('ad-form--disabled');
+  };
+
   var activatePage = function () {
     document.querySelector('.map').classList.remove('map--faded');
-    document.querySelector('.map__filters').classList.remove('ad-form--disabled');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
-    enableArray(FIELDSETS);
-    enableArray(SELECTS);
-    window.backend.get(window.place.visualizePins, getMessage, window.filter.saveData);
+    enableArray(noticeFieldsets);
+    enableArray(noticeSelects);
+    window.backend.get(window.place.visualizePins, getMessage, window.filter.saveData, activateFilter);
   };
 
   var getPosition = function () {
@@ -106,7 +121,6 @@
     var coordinatesField = document.querySelector('#address');
     coordinatesField.value = (locatePin[0] + MAIN_PIN_OFFSET) + ', ' + (locatePin[1] + MAIN_PIN_OFFSET) + ',';
   };
-
 
   var listenPins = function () {
     var clickedPins = Array.from(document.querySelectorAll('.map__pin'));
@@ -192,8 +206,12 @@
   };
 
   document.addEventListener('DOMContentLoaded', writeDownInitialCoordinates);
-  disableArray(FIELDSETS);
-  disableArray(SELECTS);
+  disableArray(mapFieldsets);
+  disableArray(mapSelects);
+
+  disableArray(noticeFieldsets);
+  disableArray(noticeSelects);
+  document.querySelector('.map__filters').classList.add('ad-form--disabled');
   listenToPinMovement();
 
   document.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
@@ -207,7 +225,7 @@
     getMessage: getMessage,
     listenToPinMovement: listenToPinMovement,
     writeDownCoordinates: writeDownCoordinates,
-    listenPins: listenPins
+    listenPins: listenPins,
   };
 
 }());
